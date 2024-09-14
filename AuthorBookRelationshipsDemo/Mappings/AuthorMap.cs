@@ -12,11 +12,12 @@ namespace AuthorBookRelationshipsDemo.Mappings
         public AuthorMap()
         {
             Table("Authors");
-            Id(u => u.Id).GeneratedBy.Identity();
-            Map(u => u.Name);
+            Id(u => u.Id).GeneratedBy.GuidComb();
+            Map(u => u.UserName);
+            Map(u=>u.Password); 
             HasMany(u=>u.Books).Inverse().Cascade.All();    
             HasOne(u => u.AuthorDetails).Cascade.All().PropertyRef(a => a.Author)
-                .Constrained(); //Relationship Integrity COnstraint
+                 .Constrained(); //Relationship Integrity COnstraint
         }
     }
 }

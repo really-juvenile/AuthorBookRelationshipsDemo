@@ -8,9 +8,11 @@ using AuthorBookRelationshipsDemo.Models;
 
 namespace AuthorBookRelationshipsDemo.Controllers
 {
+    [Authorize]
     public class AuthorController : Controller
     {
         //Author Specific (authorized)
+        [AllowAnonymous]
         public ActionResult Index()
         {
             using (var session = NHibernateHelper.CreateSession())
@@ -38,7 +40,7 @@ namespace AuthorBookRelationshipsDemo.Controllers
                 }
             }
         }
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
             using (var session = NHibernateHelper.CreateSession())
             {
@@ -63,7 +65,7 @@ namespace AuthorBookRelationshipsDemo.Controllers
             }
         }
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
             using (var session = NHibernateHelper.CreateSession())
             {
@@ -75,7 +77,7 @@ namespace AuthorBookRelationshipsDemo.Controllers
             }
         }
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteProduct(int id)
+        public ActionResult DeleteProduct(Guid id)
         {
             using (var session = NHibernateHelper.CreateSession())
             {

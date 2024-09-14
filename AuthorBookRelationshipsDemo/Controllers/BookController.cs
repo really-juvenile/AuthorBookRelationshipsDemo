@@ -9,6 +9,7 @@ using NHibernate.Criterion;
 
 namespace AuthorBookRelationshipsDemo.Controllers
 {
+    [Authorize]
     public class BookController : Controller
     {
         // GET: Book
@@ -23,8 +24,8 @@ namespace AuthorBookRelationshipsDemo.Controllers
             }
         }
 
-        
-        public ActionResult BookDetails(int authId)
+
+        public ActionResult BookDetails(Guid authId)
         {
             using (var session = NHibernateHelper.CreateSession())
             {
@@ -36,7 +37,7 @@ namespace AuthorBookRelationshipsDemo.Controllers
         }
 
         // Create Order
-        public ActionResult Create(int authId)
+        public ActionResult Create(Guid authId)
         {
             var book = new Book { Author = new Author { Id = authId } };
             ViewBag.AuthorId = authId;
@@ -90,9 +91,52 @@ namespace AuthorBookRelationshipsDemo.Controllers
                 }
             }
         }
+        //public ActionResult Delete(int id)
+        //{
+        //    using (var session = NHibernateHelper.CreateSession())
+        //    {
+        //        var authId = Session["AuthorId"];
+        //        var author = session.Query<Author>().FirstOrDefault(a => a.Id == (Guid)authId);
 
-        // Delete Order
-        public ActionResult Delete(int id)
+        //        if (author == null)
+        //        {
+        //            return HttpNotFound("Author not found");
+        //        }
+
+        //        var targetBook = author.Books.FirstOrDefault(o => o.Id == id);
+
+        //        if (targetBook == null)
+        //        {
+        //            return HttpNotFound("Book not found");
+        //        }
+
+        //        return View(targetBook);
+        //    }
+        //}
+
+
+        //[HttpPost, ActionName("Delete")]
+        //public ActionResult DeleteBook(int id)
+        //{
+        //    using (var session = NHibernateHelper.CreateSession())
+        //    {
+        //        using (var txn = session.BeginTransaction())
+        //        {
+
+        //            var targetBook = session.Get<Book>(id);
+
+        //            session.Delete(targetBook);
+
+        //            txn.Commit();
+
+        //            return RedirectToAction("BookDetails");
+        //        }
+        //    }
+
+        //}
+
+        //Delete Order
+        public ActionResult Delete(Guid id)
         {
             using (var session = NHibernateHelper.CreateSession())
             {
@@ -104,19 +148,24 @@ namespace AuthorBookRelationshipsDemo.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(Guid id)
         {
             using (var session = NHibernateHelper.CreateSession())
             {
-                using (var txn = session.BeginTransaction())
-                {
-                    var book = session.Get<Book>(id);
-                    if (book == null) return HttpNotFound();
+                var book = session.Get<Book>(id);
 
-                    session.Delete(book);
-                    txn.Commit();
-                    return RedirectToAction("BookDetails", new { authId = book.Author.Id });
+                if (book != null)
+                {
+
+                    using (var txn = session.BeginTransaction())
+                    {
+
+                        session.Delete(book);
+                        txn.Commit();
+
+                    }
                 }
+                return RedirectToAction("BookDetails", new { authId = book.Author.Id });
             }
         }
     }

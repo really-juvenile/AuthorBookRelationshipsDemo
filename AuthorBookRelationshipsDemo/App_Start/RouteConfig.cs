@@ -16,7 +16,9 @@ namespace AuthorBookRelationshipsDemo
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Author", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "User", action = "Login", id = UrlParameter.Optional }
+                //constraints: new { id = @"^(\{[A-Fa-f0-9]{8}\-[A-Fa-f0-9]{4}\-[A-Fa-f0-9]{4}\-[A-Fa-f0-9]{4}\-[A-Fa-f0-9]{12}\})?$" } // Optional, if you need to enforce the format.
+
             );
         }
     }
